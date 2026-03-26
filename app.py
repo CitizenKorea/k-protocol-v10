@@ -47,7 +47,8 @@ lang_dict = {
         "met_lvc": "LVC 원시 평균 질량",
         "met_k": "우주 절대 질량 (K-보정)",
         "plot_header": "### 📊 실측 데이터 렌즈 역보정 (Shift) 시각화",
-        "plot_desc": "선택하신 렌즈(**{}**)의 왜곡 지수($S_{{loc}}^3 = {:.6f}$)를 제거하여, 가짜 질량 데이터가 실제 우주의 절대 질량으로 통째로 이동(Shift)하는 과정을 보여줍니다.",
+        # 에러 해결: {0}은 렌즈이름, {1:.6f}는 왜곡지수
+        "plot_desc": "선택하신 렌즈(**{0}**)의 왜곡 지수($S_{{loc}}^3 = {1:.6f}$)를 제거하여, 가짜 질량 데이터가 실제 우주의 절대 질량으로 통째로 이동(Shift)하는 과정을 보여줍니다.",
         "plot_leg_raw": "LVC 원시 데이터 (렌즈 왜곡됨)",
         "plot_leg_k": "K-PROTOCOL 절대 질량 (렌즈 제거됨)",
         "plot_title": "렌즈 왜곡 제거에 따른 질량 분포 이동 ({})",
@@ -84,7 +85,8 @@ lang_dict = {
         "met_lvc": "LVC Raw Average Mass",
         "met_k": "Absolute Cosmic Mass (K-Cal)",
         "plot_header": "### 📊 Visualizing Empirical Data Calibration (Shift)",
-        "plot_desc": "By removing the distortion index ($S_{{loc}}^3 = {:.6f}$) of your selected lens (**{}**), the fake mass data shifts entirely to the true absolute mass of the universe.",
+        # 에러 해결: {1:.6f}는 왜곡지수, {0}은 렌즈이름. (번호를 명시하여 에러 차단)
+        "plot_desc": "By removing the distortion index ($S_{{loc}}^3 = {1:.6f}$) of your selected lens (**{0}**), the fake mass data shifts entirely to the true absolute mass of the universe.",
         "plot_leg_raw": "LVC Raw Data (Lens Distorted)",
         "plot_leg_k": "K-PROTOCOL Absolute Mass (Lens Removed)",
         "plot_title": "Mass Distribution Shift by Lens Removal ({})",
@@ -242,6 +244,7 @@ if st.sidebar.button(T["btn_start"]):
                 # 렌즈 이름 파싱 (이모지 및 부가설명 제거)
                 clean_lens_name = selected_lens_text.split(" ")[1] if " " in selected_lens_text else selected_lens_text
                 
+                # 에러 완벽 해결: 순서에 상관없이 명확히 변수 지정
                 st.markdown(T["plot_desc"].format(clean_lens_name, s_loc**3))
                 
                 fig = go.Figure()
