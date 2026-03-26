@@ -5,7 +5,7 @@ import plotly.graph_objects as go
 import pandas as pd
 
 # 깃허브에 올린 파일 이름과 똑같이 적어주세요
-MY_FILE = "GW170814_posterior_samples.h5" 
+MY_FILE = "GW170814_GWTC-1.hdf5"
 
 st.set_page_config(page_title="K-PROTOCOL Absolute Proof", layout="wide")
 st.title("🛡️ K-PROTOCOL: 실측 데이터 확정적 검증")
