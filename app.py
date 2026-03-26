@@ -104,13 +104,38 @@ st.title(T["app_title"])
 st.markdown(T["intro"])
 st.divider()
 
-# --- 4. 사이드바 및 파일 설정 ---
+# --- 4. 내부 핵심 변수 (언어에 영향받지 않음) ---
+internal_source_keys = ["local", "upload"]
+source_labels = {
+    "local": T["source_local"],
+    "upload": T["source_upload"]
+}
+
+internal_lens_keys = ["earth", "h1", "l1", "v1"]
+lens_g_values = {
+    "earth": 9.80665,
+    "h1": 9.8073527,
+    "l1": 9.7936814,
+    "v1": 9.8053340
+}
+lens_labels = {
+    "earth": T["lens_earth"],
+    "h1": T["lens_h1"],
+    "l1": T["lens_l1"],
+    "v1": T["lens_v1"]
+}
+
+# --- 5. 사이드바 및 파일 설정 ---
 st.sidebar.markdown("---")
 st.sidebar.header(T["sidebar_setting"])
-file_source = st.sidebar.radio(T["data_source_label"], [T["source_local"], T["source_upload"]])
+selected_source_key = st.sidebar.radio(
+    T["data_source_label"], 
+    internal_source_keys, 
+    format_func=lambda x: source_labels[x]
+)
 
 target_file = None
-if file_source == T["source_local"]:
+if selected_source_key == "local":
     if os.path.exists(MY_FILE):
         target_file = MY_FILE
         st.sidebar.success(T["file_connected"].format(MY_FILE))
@@ -125,15 +150,15 @@ st.sidebar.markdown("---")
 st.sidebar.header(T["lens_header"])
 st.sidebar.markdown(T["lens_desc"])
 
-# 관측소별 고유 중력 세팅 (다국어 연동)
-lens_options = {
-    T["lens_earth"]: 9.80665,
-    T["lens_h1"]: 9.8073527,
-    T["lens_l1"]: 9.7936814,
-    T["lens_v1"]: 9.8053340
-}
-selected_lens = st.sidebar.radio(T["lens_select"], list(lens_options.keys()), label_visibility="collapsed")
-g_target = lens_options[selected_lens]
+selected_lens_key = st.sidebar.radio(
+    T["lens_select"], 
+    internal_lens_keys, 
+    format_func=lambda x: lens_labels[x], 
+    label_visibility="collapsed"
+)
+
+g_target = lens_g_values[selected_lens_key]
+selected_lens_text = lens_labels[selected_lens_key]
 
 # --- 핵심 분석 함수 ---
 def analyze_k_protocol(file_obj):
@@ -214,8 +239,8 @@ if st.sidebar.button(T["btn_start"]):
                 # --- 시각화 (Plotly) ---
                 st.write(T["plot_header"])
                 
-                # 렌즈 이름 파싱 (이모지 및 설명 제거)
-                clean_lens_name = selected_lens.split(" ")[1] if " " in selected_lens else selected_lens
+                # 렌즈 이름 파싱 (이모지 및 부가설명 제거)
+                clean_lens_name = selected_lens_text.split(" ")[1] if " " in selected_lens_text else selected_lens_text
                 
                 st.markdown(T["plot_desc"].format(clean_lens_name, s_loc**3))
                 
